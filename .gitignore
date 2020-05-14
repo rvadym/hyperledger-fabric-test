@@ -1,0 +1,14 @@
+*.AppleDouble
+*.DS_Store
+.env
+.env.dist
+!/.env.dist
+.idea/
+Makefile
+!/Makefile
+scripts/
+!/scripts
+*pkg
+simplequeue/src/fabric/simplequeue
+simplequeue/src/fabric/vendor/*
+!simplequeue/src/fabric/vendor/modules.txt
