@@ -1,6 +1,5 @@
 package usecases
 
-
 import (
 	"errors"
 	"github.com/rvadym/hyperledger-fabric-test/application/contracts"

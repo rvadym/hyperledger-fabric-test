@@ -28,9 +28,9 @@ func (uc *saveItem) ExecuteSaveItem(ID string, order int, content string) (*doma
 
 	item := &domain.Item{
 		ObjectType: "item",
-		ID: ID,
-		Content: content,
-		Order: order,
+		ID:         ID,
+		Content:    content,
+		Order:      order,
 	}
 
 	return item, uc.saveItemRepo.SaveItem(item)

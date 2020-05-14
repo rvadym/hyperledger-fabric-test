@@ -24,13 +24,13 @@ func NewReorderItems(
 }
 
 type reorderItems struct {
-	getItemUC GetItemInterface
+	getItemUC     GetItemInterface
 	getAllItemsUC GetAllItemsInterface
-	saveItemUC SaveItemInterface
+	saveItemUC    SaveItemInterface
 }
 
 func (uc *reorderItems) ExecuteReorderItems(itemId string, steps int) error {
-	fmt.Println("About to move item with ID " + itemId + " " + strconv.Itoa(steps) + " step(s) up/down" )
+	fmt.Println("About to move item with ID " + itemId + " " + strconv.Itoa(steps) + " step(s) up/down")
 	var err error
 	var item *domain.Item
 	var items []*domain.Item
@@ -92,7 +92,7 @@ func (uc *reorderItems) reorderItems(items []*domain.Item, item *domain.Item, st
 			newItemPosition = 0
 		}
 
-		if newItemPosition > len(reorderedItems) - 1 {
+		if newItemPosition > len(reorderedItems)-1 {
 			newItemPosition = len(reorderedItems) - 1
 		}
 

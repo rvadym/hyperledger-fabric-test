@@ -16,7 +16,7 @@ func NewUpdateItem(getItemUC GetItemInterface, saveItemUC SaveItemInterface) Upd
 }
 
 type updateItem struct {
-	getItemUC GetItemInterface
+	getItemUC  GetItemInterface
 	saveItemUC SaveItemInterface
 }
 
