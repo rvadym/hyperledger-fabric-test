@@ -236,24 +236,30 @@ func (r *ItemRepo) GetAllItems() ([]*domain.Item, error) {
 	return items, err
 }
 
-func (r *ItemRepo) SearchItems(perPage int32, sort string) ([]domain.Item, error) {
+func (r *ItemRepo) SearchItems(search string, perPage int32, sort string) ([]*domain.Item, error) {
 	var err error
 	var queryResults []byte
-	var items []domain.Item
+	var items []*domain.Item
 	var dbItems []dbItem
 
 	sortString := ""
+	searchString := ""
 	queryString := ""
 	sortTemplate := ",\"sort\":%s"
-	queryTemplate := "{\"selector\":{\"docType\":\"item\"}%s}"
+	searchTemplate := ",\"content\":{\"$regex\":\"%s\""
+	queryTemplate := "{\"selector\":{\"docType\":\"item\"%s}}%s}"
 
 	if sort != "" {
 		sortString = fmt.Sprintf(sortTemplate, sort)
 	}
 
-	queryString = fmt.Sprintf(queryTemplate, sortString)
+	if search != "" {
+		searchString = fmt.Sprintf(searchTemplate, search)
+	}
 
-	queryResults, err = r.getQueryResultForQueryString(queryString, 1, "")
+	queryString = fmt.Sprintf(queryTemplate, searchString, sortString)
+
+	queryResults, err = r.getQueryResultForQueryString(queryString, perPage, "")
 	if err != nil {
 		fmt.Println("Error: ItemRepo.SearchItems (2) " + err.Error())
 		return nil, err
@@ -266,7 +272,7 @@ func (r *ItemRepo) SearchItems(perPage int32, sort string) ([]domain.Item, error
 	}
 
 	for _, dbItem := range dbItems {
-		items = append(items, dbItem.Record)
+		items = append(items, &dbItem.Record)
 	}
 
 	return items, nil

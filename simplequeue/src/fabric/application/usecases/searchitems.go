@@ -7,7 +7,7 @@ import (
 )
 
 type SearchItemsInterface interface {
-	ExecuteSearchItems(filter *contracts.Filter) ([]domain.Item, error)
+	ExecuteSearchItems(filter *contracts.Filter) ([]*domain.Item, error)
 }
 
 func NewSearchItems(searchItemsRepo contracts.SearchItemsRepoInterface) SearchItemsInterface {
@@ -20,16 +20,17 @@ type searchItems struct {
 	searchItemsRepo contracts.SearchItemsRepoInterface
 }
 
-func (uc *searchItems) ExecuteSearchItems(filter *contracts.Filter) ([]domain.Item, error) {
+func (uc *searchItems) ExecuteSearchItems(filter *contracts.Filter) ([]*domain.Item, error) {
 	var err error
-	var items []domain.Item
+	var items []*domain.Item
 
 	items, err = uc.searchItemsRepo.SearchItems(
+		filter.Search,
 		filter.Limit,
 		filter.Sort,
 	)
 	if err != nil {
-		err = errors.New("failed to search for items")
+		err = errors.New("failed to search items")
 		return nil, err
 	}
 
