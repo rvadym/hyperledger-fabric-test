@@ -24,5 +24,5 @@ type GetItemsRepoInterface interface {
 }
 
 type SearchItemsRepoInterface interface {
-	SearchItems(perPage int32, sort string) ([]domain.Item, error)
+	SearchItems(search string, perPage int32, sort string) ([]*domain.Item, error)
 }

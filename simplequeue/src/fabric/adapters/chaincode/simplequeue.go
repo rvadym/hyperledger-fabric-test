@@ -9,7 +9,6 @@ import (
 	"github.com/rvadym/hyperledger-fabric-test/application/contracts"
 	"github.com/rvadym/hyperledger-fabric-test/application/usecases"
 	"github.com/rvadym/hyperledger-fabric-test/domain"
-	"math/rand"
 )
 
 // SimpleQueue Chaincode implementation
@@ -17,31 +16,8 @@ type SimpleQueue struct {
 	contractapi.Contract
 }
 
-
 func (t *SimpleQueue) Init(ctx contractapi.TransactionContextInterface) error {
 	return nil
-}
-
-func (t *SimpleQueue) Test(ctx contractapi.TransactionContextInterface) (string, error) {
-	fmt.Println("SimpleQueue > Test")
-	var err error
-	var item *domain.Item
-
-	itemsRepo := &repo.ItemRepo{Ctx: ctx}
-	item, err = itemsRepo.GetLastItem()
-	if err != nil {
-		jsonResp := "{\"Error\": \"" + err.Error() + "\"}"
-		return "", errors.New(jsonResp)
-	}
-
-	itemJson, err := json.Marshal(item)
-	if err != nil {
-		fmt.Println("SimpleQueue.Enqueue (1) " + err.Error())
-		jsonResp := "{\"Error\":\"Bla bla bla bla bla\"}"
-		return "", errors.New(jsonResp)
-	}
-
-	return string(itemJson), nil
 }
 
 func (t *SimpleQueue) Enqueue(ctx contractapi.TransactionContextInterface, content string) (string, error) {
@@ -112,18 +88,6 @@ func (t *SimpleQueue) Move(ctx contractapi.TransactionContextInterface, id strin
 	return err
 }
 
-func (t *SimpleQueue) Add(ctx contractapi.TransactionContextInterface, content string) (string, error) {
-	fmt.Println("SimpleQueue > Add item to queue")
-	var err error
-	var item *domain.Item
-
-	saveItemRepo := &repo.ItemRepo{Ctx: ctx}
-	saveItemUC := usecases.NewSaveItem(saveItemRepo)
-	item, err = saveItemUC.ExecuteSaveItem("", rand.Intn(100), content)
-
-	return item.ID, err
-}
-
 func (t *SimpleQueue) Get(ctx contractapi.TransactionContextInterface, id string) (string, error) {
 	fmt.Println("SimpleQueue > Get item from queue")
 	var err error
@@ -190,32 +154,38 @@ func (t *SimpleQueue) Delete(ctx contractapi.TransactionContextInterface, id str
 	return err
 }
 
-func (t *SimpleQueue) Search(ctx contractapi.TransactionContextInterface, content string) (string, error) {
-	fmt.Println("SimpleQueue > Enqueue item")
+func (t *SimpleQueue) Search(ctx contractapi.TransactionContextInterface, search string) (string, error) {
+	fmt.Println("SimpleQueue > Search items")
 	var err error
-	var item *domain.Item
+	var items []*domain.Item
 	var filter contracts.Filter
 
-	filter.Limit = 1
+	filter.Limit = 100
 	filter.Sort = "[{\"order\": \"desc\"}]"
+	filter.Search = search
 
 	itemsRepo := &repo.ItemRepo{Ctx: ctx}
-	getItemUC := usecases.NewGetItem(itemsRepo)
-	saveItemUC := usecases.NewSaveItem(itemsRepo)
-	enqueueItemUC := usecases.NewEnqueueItem(getItemUC, saveItemUC)
+	searchItemsUC := usecases.NewSearchItems(itemsRepo)
 
-	item, err = enqueueItemUC.ExecuteEnqueueItem(content)
+	items, err = searchItemsUC.ExecuteSearchItems(&filter)
 	if err != nil {
 		jsonResp := "{\"Error\": \"" + err.Error() + "\"}"
 		return "", errors.New(jsonResp)
 	}
 
-	itemJson, err := json.Marshal(item)
+	itemJson, err := json.Marshal(items)
 	if err != nil {
-		fmt.Println("SimpleQueue.Enqueue (1) " + err.Error())
-		jsonResp := "{\"Error\":\"Item was not queued\"}"
+		fmt.Println("SimpleQueue.Search (1) " + err.Error())
+		jsonResp := "{\"Error\":\"Items search failed\"}"
 		return "", errors.New(jsonResp)
 	}
 
 	return string(itemJson), nil
+}
+
+func (t *SimpleQueue) Test(ctx contractapi.TransactionContextInterface) (string, error) {
+	fmt.Println("SimpleQueue > Test")
+	var err error
+
+	return "", err
 }
