@@ -16,7 +16,7 @@ func NewDequeueItem(getItemUC GetItemInterface, deleteItemUC DeleteItemInterface
 }
 
 type dequeueItem struct {
-	getItemUC GetItemInterface
+	getItemUC    GetItemInterface
 	deleteItemUC DeleteItemInterface
 }
 

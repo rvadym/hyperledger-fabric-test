@@ -17,7 +17,7 @@ func NewEnqueueItem(getItemUC GetItemInterface, saveItemUC SaveItemInterface) En
 }
 
 type enqueueItem struct {
-	getItemUC GetItemInterface
+	getItemUC  GetItemInterface
 	saveItemUC SaveItemInterface
 }
 

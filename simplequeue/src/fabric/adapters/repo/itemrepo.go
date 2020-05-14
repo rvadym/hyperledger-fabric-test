@@ -13,7 +13,7 @@ import (
 )
 
 type dbItem struct {
-	Key string `json:"Key"`
+	Key    string      `json:"Key"`
 	Record domain.Item `json:"Record"`
 }
 
@@ -232,7 +232,6 @@ func (r *ItemRepo) GetAllItems() ([]*domain.Item, error) {
 		items = append(items, item)
 	}
 
-
 	return items, err
 }
 
@@ -361,7 +360,6 @@ func (r *ItemRepo) deleteAllOrderItemIdCompositeKeys(itemId string) error {
 
 	return nil
 }
-
 
 func (r *ItemRepo) getAllOrderItemIdCompositeKeys() ([]string, error) {
 	return r.getOrderItemIdCompositeKeysForId("")

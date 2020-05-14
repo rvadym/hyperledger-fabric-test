@@ -42,7 +42,6 @@ func TestNewGetItems(t *testing.T) {
 		t.Errorf("Error is not nil.")
 	}
 
-
 	if items[0] != expectedItems[0] {
 		t.Errorf("Items are not equal.")
 	}
