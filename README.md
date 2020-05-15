@@ -9,6 +9,7 @@
 
 ```bash
 make install
+make help # to see list of available commands
 ```
 
 ## Start development/testing setup
