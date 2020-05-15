@@ -98,3 +98,33 @@ Take items from the queue (can be executed few times):
 peer chaincode invoke -n mycc -c '{"Args":["dequeue"]}' -C myc
 ```
 
+Get few items filtered by content:
+```bash
+peer chaincode query -n mycc -c '{"Args":["search","bla"]}' -C myc
+```
+
+Get item by id:
+```bash
+peer chaincode query -n mycc -c '{"Args":["get","febb94de-45ca-4cdf-ac73-eb7062bf5999"]}' -C myc
+```
+
+Update item content by id:
+```bash
+peer chaincode invoke -n mycc -c '{"Args":["update","26f83189-bfae-4612-b1c5-608d35af675c", "bla-1234567"]}' -C myc
+```
+
+Update few items content by ids:
+```bash
+peer chaincode invoke -n mycc -c '{"Args":["batchUpdate","c6fec7de-c29d-4e43-98d6-23c1077ab9ce", "bla-090909", "196e69c8-b716-4048-b930-77d65674d466", "Something else"]}' -C myc
+```
+
+Move item in the queue (positive value to move up and negative to move down):
+```bash
+peer chaincode invoke -n mycc -c '{"Args":["move", "ba1fe7d8-65ae-4125-b5b3-1ffbfcfe2062", "-2"]}' -C myc
+```
+
+Delete item by id:
+```bash
+peer chaincode invoke -n mycc -c '{"Args":["delete","5ffca407-8f6d-467a-80c0-b3194e775728"]}' -C myc
+```
+

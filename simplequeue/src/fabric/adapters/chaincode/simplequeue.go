@@ -139,6 +139,28 @@ func (t *SimpleQueue) Update(ctx contractapi.TransactionContextInterface, id, co
 	return string(jsonResp), err
 }
 
+func (t *SimpleQueue) BatchUpdate(ctx contractapi.TransactionContextInterface) error {
+	fmt.Println("SimpleQueue > BatchUpdate items in queue")
+	var err error
+
+	args := ctx.GetStub().GetStringArgs()
+
+	itemsRepo := &repo.ItemRepo{Ctx: ctx}
+
+	getItemUC := usecases.NewGetItem(itemsRepo)
+	saveItemUC := usecases.NewSaveItem(itemsRepo)
+	updateItemUC := usecases.NewUpdateItem(getItemUC, saveItemUC)
+	batchUpdateItemsUC := usecases.NewBatchUpdateItems(updateItemUC)
+
+	err = batchUpdateItemsUC.ExecuteBatchUpdateItems(args)
+	if err != nil {
+		jsonResp := "{\"Error\": \"" + err.Error() + "\"}"
+		return errors.New(jsonResp)
+	}
+
+	return nil
+}
+
 func (t *SimpleQueue) Delete(ctx contractapi.TransactionContextInterface, id string) error {
 	fmt.Println("SimpleQueue > Delete item from queue")
 	var err error
